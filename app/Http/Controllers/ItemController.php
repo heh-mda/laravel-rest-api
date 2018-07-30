@@ -27,11 +27,6 @@ class ItemController extends Controller
 
     public function update(StoreOrUpdateItem $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'max:255',
-            'key' => 'required|max:25'
-        ]);
-
         $item = Item::findOrFail($id);
         $item->update($request->all());
 
