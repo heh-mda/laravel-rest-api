@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Item;
+use App\Http\Requests\StoreOrUpdateItem;
 
 class ItemController extends Controller
 {
@@ -12,7 +13,7 @@ class ItemController extends Controller
         return Item::all();
     }
 
-    public function store(Request $request)
+    public function store(StoreOrUpdateItem $request)
     {
         $item = Item::create($request->all());
 
@@ -24,8 +25,13 @@ class ItemController extends Controller
         return Item::find($id);
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreOrUpdateItem $request, $id)
     {
+        $this->validate($request, [
+            'name' => 'max:255',
+            'key' => 'required|max:25'
+        ]);
+
         $item = Item::findOrFail($id);
         $item->update($request->all());
 
