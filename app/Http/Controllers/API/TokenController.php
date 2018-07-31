@@ -11,7 +11,7 @@ class TokenController extends Controller
     public function store()
     {
         $token = new Token();
-        $token->generate();
+        $token = $token->generate();
 
         return response()->json($token, 201); //created
     }

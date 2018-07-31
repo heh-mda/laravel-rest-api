@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['namespace' => 'API', 'middleware' => 'token'], function(){
+    Route::get('/items', 'ItemController@index');
     Route::get('/items/{id}', 'ItemController@show');
     Route::post('/items', 'ItemController@store');
     Route::put('/items/{id}', 'ItemController@update');

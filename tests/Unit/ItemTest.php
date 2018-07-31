@@ -13,48 +13,74 @@ class ItemTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function testItemsAreCreatedCorrectly()
-    { 
+    protected $headers = null;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        //Миграция для БД с версиями моделей
+        $this->artisan('migrate', [
+            '--path' => 'vendor/venturecraft/revisionable/src/migrations',
+        ]);
+
+        //Токен требуется везде. Так что лучше записать его в свойство.
         $token = new Token();
         $token = $token->generate();
 
-        $headers = ['Authorization' => $token];
+        $this->headers = ['Authorization' => $token];
+    }
 
+    public function testItemsAreCreatedCorrectly()
+    { 
         $payload = [
             'name' => 'Lorem',
             'key' => 'Ipsum',
         ];
 
-        $this->json('POST', '/api/items', $payload, $headers)
+        $this->json('POST', '/api/items', $payload, $this->headers)
         ->assertStatus(201)
         ->assertJson(['id' => 1, 'name' => 'Lorem', 'key' => 'Ipsum']);
     }
 
     public function testItemsAreReadedCorrectly()
     {
-        $token = new Token();
-        $token = $token->generate();
-
-        $headers = ['Authorization' => $token];
-
         $item = factory(Item::class)->create([
             'name' => 'Lorem',
             'key' => 'Ipsum',
         ]);
 
-        $this->json('GET', '/api/items/' . $item->id, [], $headers)
+        $this->json('GET', '/api/items/' . $item->id, [], $this->headers)
         ->assertStatus(200)
         ->assertJson(['id' => 1, 'name' => 'Lorem', 'key' => 'Ipsum'])
         ->assertJsonStructure(['id', 'name', 'key', 'created_at', 'updated_at']);
     }
 
+    public function testItemsAreListedCorrectly()
+    {
+        factory(Item::class)->create([
+            'name' => 'First Name',
+            'key' => 'firstkey',
+        ]);
+
+        factory(Item::class)->create([
+            'name' => 'Second Name',
+            'key' => 'secondkey',
+        ]);
+
+        $this->json('GET', '/api/items/', [], $this->headers)
+        ->assertStatus(200)
+        ->assertJson([
+            ['id' => 1, 'name' => 'First Name', 'key' => 'firstkey'],
+            ['id' => 2, 'name' => 'Second Name', 'key' => 'secondkey']
+        ])
+        ->assertJsonStructure([
+            '*' => ['id', 'name', 'key', 'created_at', 'updated_at']
+        ]);
+    }
+
     public function testItemsAreUpdatedCorrectly()
     {
-        $token = new Token();
-        $token = $token->generate();
-
-        $headers = ['Authorization' => $token];
-
         $item = factory(Item::class)->create();
 
         $payload = [
@@ -62,21 +88,16 @@ class ItemTest extends TestCase
             'key' => 'Ipsum',
         ];
 
-        $this->json('PUT', '/api/items/' . $item->id, $payload, $headers)
+        $this->json('PUT', '/api/items/' . $item->id, $payload, $this->headers)
         ->assertStatus(200)
         ->assertJson(['id' => 1, 'name' => 'Lorem', 'key' => 'Ipsum']);
     }
 
     public function testItemsAreDeletedCorrectly()
     {
-        $token = new Token();
-        $token = $token->generate();
-
-        $headers = ['Authorization' => $token];
-
         $item = factory(Item::class)->create();
 
-        $this->json('DELETE', '/api/items/' . $item->id, [], $headers)
+        $this->json('DELETE', '/api/items/' . $item->id, [], $this->headers)
         ->assertStatus(204);
     }
 }
