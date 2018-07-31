@@ -83,4 +83,11 @@ class ItemController extends Controller
 
         return redirect()->route('items.index');
     }
+
+    public function showHistory($id)
+    {
+        $item = Item::find($id);
+
+        return view('items.history', compact('item'));
+    }
 }

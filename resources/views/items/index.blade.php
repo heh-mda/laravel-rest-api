@@ -9,6 +9,7 @@
             <th scope="col">Key</th>
             <th scope="col">Created at</th>
             <th scope="col">Updated at</th>
+            <th scope="col">History</th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
         </tr>
@@ -21,6 +22,9 @@
         <td>{{$item->key}}</td>
         <td>{{$item->created_at->format('d/m/y')}}</td>
         <td>{{$item->updated_at->format('d/m/y')}}</td>
+        <td>
+            <a href="{{action('ItemController@showHistory', $item->id)}}" class="btn btn-info">History</a>
+        </td>
         <td>
             <a href="{{action('ItemController@edit', $item->id)}}" class="btn btn-primary">Edit</a>
         </td>
