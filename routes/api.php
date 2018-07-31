@@ -17,7 +17,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/items/{id}', 'API\ItemController@show');
-Route::post('/items', 'API\ItemController@store');
-Route::put('/items/{id}', 'API\ItemController@update');
-Route::delete('/items/{id}', 'API\ItemController@delete');
+Route::group(['namespace' => 'API', 'middleware' => 'token'], function(){
+    Route::get('/items/{id}', 'ItemController@show');
+    Route::post('/items', 'ItemController@store');
+    Route::put('/items/{id}', 'ItemController@update');
+    Route::delete('/items/{id}', 'ItemController@delete');
+});
+
+Route::post('/token', 'API\TokenController@store');
+
