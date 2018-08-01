@@ -41,6 +41,12 @@ class ItemTest extends TestCase
         $this->json('POST', '/api/items', $payload, $this->headers)
         ->assertStatus(201)
         ->assertJson(['id' => 1, 'name' => 'Lorem', 'key' => 'Ipsum']);
+
+        $this->assertDatabaseHas('items', [
+            'id' => 1,
+            'name' => 'Lorem',
+            'key' => 'Ipsum',
+        ]);
     }
 
     public function testItemsAreReadedCorrectly()
@@ -91,6 +97,18 @@ class ItemTest extends TestCase
         $this->json('PUT', '/api/items/' . $item->id, $payload, $this->headers)
         ->assertStatus(200)
         ->assertJson(['id' => 1, 'name' => 'Lorem', 'key' => 'Ipsum']);
+
+        $this->assertDatabaseMissing('items', [
+            'id' => 1,
+            'name' => $item->name,
+            'key' => $item->key,
+        ]);
+
+        $this->assertDatabaseHas('items', [
+            'id' => 1,
+            'name' => 'Lorem',
+            'key' => 'Ipsum',
+        ]);
     }
 
     public function testItemsAreDeletedCorrectly()
@@ -99,5 +117,10 @@ class ItemTest extends TestCase
 
         $this->json('DELETE', '/api/items/' . $item->id, [], $this->headers)
         ->assertStatus(204);
+
+        $this->assertDatabaseMissing('items', [
+            'name' => $item->name,
+            'key' => $item->key,
+        ]);
     }
 }
