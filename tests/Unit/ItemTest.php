@@ -19,7 +19,7 @@ class ItemTest extends TestCase
     {
         parent::setUp();
 
-        //Миграция для БД с версиями моделей
+        //Миграция для таблицы с версиями моделей
         $this->artisan('migrate', [
             '--path' => 'vendor/venturecraft/revisionable/src/migrations',
         ]);
