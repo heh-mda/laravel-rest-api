@@ -24,8 +24,8 @@ class StoreOrUpdateItem extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'max:255',
-            'key' => 'required|max:25'
+            'name' => 'max:255|nullable|string',
+            'key' => 'required|max:25|string|unique:items'
         ];
     }
 }
