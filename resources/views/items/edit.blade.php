@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<form action="{{action('ItemController@update', $item->id)}}" method="post">
+<form action="{{route('items.update', $item->id)}}" method="post">
     <div class="row">
         <div class="col-md-5 mx-auto">
                 @csrf

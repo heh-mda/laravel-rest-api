@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<form action="{{action('ItemController@store')}}" method="post">
+<form action="{{route('items.store')}}" method="post">
     <div class="row">
         <div class="col-md-5 mx-auto">
                 @csrf

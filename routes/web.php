@@ -18,4 +18,4 @@ Route::get('/', function () {
 Route::resource('/items', 'ItemController')->except([
     'show'
 ]);
-Route::get('/items/{id}/history', 'ItemController@showHistory');
+Route::get('/items/{id}/history', 'ItemController@showHistory')->name('items.history');

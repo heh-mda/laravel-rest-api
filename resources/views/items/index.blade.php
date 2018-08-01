@@ -23,13 +23,13 @@
         <td>{{$item->created_at->format('d/m/y')}}</td>
         <td>{{$item->updated_at->format('d/m/y')}}</td>
         <td>
-            <a href="{{action('ItemController@showHistory', $item->id)}}" class="btn btn-info">History</a>
+            <a href="{{route('items.history', $item->id)}}" class="btn btn-info">History</a>
         </td>
         <td>
-            <a href="{{action('ItemController@edit', $item->id)}}" class="btn btn-primary">Edit</a>
+            <a href="{{route('items.edit', $item->id)}}" class="btn btn-primary">Edit</a>
         </td>
         <td>
-            <form action="{{action('ItemController@destroy', $item->id)}}" method="post">
+            <form action="{{route('items.destroy', $item->id)}}" method="post">
                 @csrf
                 <input name="_method" type="hidden" value="DELETE">
                 <button class="btn btn-danger" type="submit">Delete</button>
@@ -40,5 +40,5 @@
     </tbody>
 </table>
 
-<a href="{{action('ItemController@create')}}" class="btn btn-success">Add</a>
+<a href="{{route('items.create')}}" class="btn btn-success">Add</a>
 @endsection
